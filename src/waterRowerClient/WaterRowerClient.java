@@ -1,13 +1,8 @@
 package waterRowerClient;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -16,6 +11,7 @@ public class WaterRowerClient extends Application {
 	private Thread clientThread;
 	private Client client;
 	private SessionRecorder sessionRecorder;
+	private MonitorTextArea ta;
 
 	public void init() throws Exception {
 		// init Application
@@ -30,40 +26,36 @@ public class WaterRowerClient extends Application {
 		client.sendCommand( Client.Commands.CMD_RESET);
 		sessionRecorder =new SessionRecorder();
 		client.registerNotifier(sessionRecorder);
+		ta.clear();
+		client.registerNotifier(ta);
 		sessionRecorder.start();
 	}
 	
 	public void stopRecording() throws IOException {
 		sessionRecorder.stop();
 		client.unregisterNotifier(sessionRecorder);
+		client.unregisterNotifier(ta);
 	}
 
 	public static void main(String[] args) {
-		
 		ClientConfig.setConfigOptions(args);
-	
-//		try {
-//			new WaterRowerClient(host, port);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
         launch(args);
+        System.exit(0);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		init();	
-		
         primaryStage.setTitle("Hello World!");
         StartStopButton btn = new StartStopButton(this);
         
+        ta=new MonitorTextArea();
+        
         StackPane root = new StackPane();
+        root.getChildren().add(ta);
         root.getChildren().add(btn);
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();	
-        
         
 	}
 
