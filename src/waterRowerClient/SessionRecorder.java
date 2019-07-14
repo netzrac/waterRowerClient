@@ -13,6 +13,7 @@ public class SessionRecorder implements DataNotifier {
 	private String path;
 	private File file;
 	private PrintWriter out;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss") ;
 
 	public SessionRecorder() {
 		path = ClientConfig.getStringOptionValue( "folder");
@@ -25,31 +26,37 @@ public class SessionRecorder implements DataNotifier {
 		}
 	}
 	
-	void start() throws IOException {  
+	public void start() throws IOException {  
 		// file name
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss") ;
-		// open file
 		String filePath=path+File.separator+dateFormat.format(new Date()) + ".data";
+		// open file
 		file = new File(filePath) ;
 		out=new PrintWriter( new BufferedWriter( new FileWriter(file)));
+		// write timestamp
+		out.println("DS:"+dateFormat.format(new Date()));
 	}
 	
-	void stop() throws IOException {
+	public void stop() throws IOException {
+		// write timestamp
+		out.println("DX:"+dateFormat.format(new Date()));
 		// close file
 		out.flush();
 		out.close();
 		// create statistics
 	}
 	
-	void delete() throws IOException {
+	public void delete() throws IOException {
 		stop();
 		file.delete();
 	}
 	
 	@Override
 	public void readEvent(String s) throws IOException {
+		if( "000000".contentEquals(s.substring(17,23))) {
+			// write timestamp
+			out.println("DL:"+dateFormat.format(new Date()));
+		}
 		out.println(s);
-		out.flush();
 	}
 
 }
