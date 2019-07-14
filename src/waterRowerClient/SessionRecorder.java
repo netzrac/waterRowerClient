@@ -14,6 +14,7 @@ public class SessionRecorder implements DataNotifier {
 	private File file;
 	private PrintWriter out;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss") ;
+	private boolean writeTimestamp=false;
 
 	public SessionRecorder() {
 		path = ClientConfig.getStringOptionValue( "folder");
@@ -52,10 +53,13 @@ public class SessionRecorder implements DataNotifier {
 	
 	@Override
 	public void readEvent(String s) throws IOException {
-		if( "000000".contentEquals(s.substring(17,23))) {
+		if (writeTimestamp) {
 			// write timestamp
 			out.println("DL:"+dateFormat.format(new Date()));
-		}
+			writeTimestamp=false;
+		} else if( "000000".contentEquals(s.substring(17,23))) {
+			writeTimestamp=true;
+		} 
 		out.println(s);
 	}
 
