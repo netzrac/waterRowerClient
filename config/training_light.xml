@@ -1,0 +1,55 @@
+<training id="1" name="training light">
+	<description>Light default training with warm-up. Duration: 24 minutes.
+	</description>
+	<steps>
+		<step id="L1WU" name="L1 Warm-Up" type="time">
+			<description>Five minutes Warm-Up Level 1</description>
+			<target type="power" metric="watt">25</target>
+			<duration type ="time" metric="min">5</duration>
+			<parameters>
+				<level>1</level>
+			</parameters>
+		</step>
+		<step id="L2WU" name="L2 Warm-Up" type="time">
+			<description>Five minutes Warm-Up Level 2</description>
+			<target type="power" metric="watt">40</target>
+			<duration type ="time" metric="min">5</duration>
+			<parameters>
+				<level>2</level>
+			</parameters>
+		</step>
+		<step id="L2500m" name="L2 500m med" type="distance">
+			<description>500m  Level 2 medium</description>
+			<target type="time" metric="sec">180</target>
+			<duration type ="distance" metric="m">500</duration>
+			<parameters>
+				<level>2</level>
+			</parameters>
+		</step>
+		<step id="Pause" name="Pause" type="pause">
+			<description>Pause</description>
+			<duration type ="time" metric="min">1</duration>
+		</step>
+		<step id="L225spm" name="2m 25spm 50watt" type="spm">
+			<description>2min 25 SPM</description>
+			<target type="spm" metric="spm">25</target>
+			<target type="power" metric="watt">50</target>
+			<duration type ="time" metric="min">2</duration>
+			<parameters>
+				<level>2</level>
+			</parameters>
+		</step>
+		<step id="L225spm" name="5m 32-24spm 50watt" type="spm">
+			<description>2min 25 SPM</description>
+			<target type="spm" metric="spm">
+				<from>32</from>
+				<to>24</to>
+			</target>
+			<target type="power" metric="watt">50</target>
+			<duration type ="time" metric="min">3</duration>
+			<parameters>
+				<level>2</level>
+			</parameters>
+		</step>
+	</steps>
+</training>
