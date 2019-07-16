@@ -58,13 +58,13 @@ public class AnimationApp extends Application {
          
                 ParallelTransition transition_green = new ParallelTransition(c, 
                 /*translate,*/ fill_green, rotate, scale_max); 
-                transition_green.setCycleCount(Timeline.INDEFINITE);
-                transition_green.setAutoReverse(true); 
+         //       transition_green.setCycleCount(Timeline.INDEFINITE);
+       //         transition_green.setAutoReverse(true); 
                 
                 ParallelTransition transition_red = new ParallelTransition(c, 
                 /*translate,*/ fill_red, rotate, scale_min); 
-                transition_red.setCycleCount(Timeline.INDEFINITE);
-                transition_red.setAutoReverse(true); 
+          //      transition_red.setCycleCount(Timeline.INDEFINITE);
+       //         transition_red.setAutoReverse(true); 
                 
                 int state=0;
                 
@@ -93,7 +93,8 @@ public class AnimationApp extends Application {
         Group root = new Group(); 
         Scene scene = new Scene(root, 500, 500, Color.BLACK); 
         Circle c = new Circle(250, 250, 125); 
-        c.setFill(Color.YELLOW); 
+        c.setFill(new Color( 1, 1, 0, 1));
+//        c.setFill(Color.YELLOW); 
         root.getChildren().add(c); 
         
         new Thread(new Abc123(c)).start();

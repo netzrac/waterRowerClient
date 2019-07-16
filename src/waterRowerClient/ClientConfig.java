@@ -27,6 +27,12 @@ public class ClientConfig {
         path.setRequired(false);
         options.addOption(path);
 
+        Option ad = new Option("ad", "animationDuration", true, "duration for graphical animation");
+        ad.setRequired(false);
+        options.addOption(ad);
+
+        
+        
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
@@ -43,6 +49,13 @@ public class ClientConfig {
 	public static String getStringOptionValue(String option) {
 	       return cmd.getOptionValue(option);
 
+	}
+
+	public static int getIntOptionValue(String option, int defaultValue) {
+		if( cmd.hasOption(option)) {
+			return Integer.parseInt(cmd.getOptionValue(option));
+		}
+        return defaultValue;
 	}
 
 	public static int getIntOptionValue(String option) {
