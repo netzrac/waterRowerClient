@@ -1,91 +1,78 @@
 package waterRowerClient;
 
-import com.sun.corba.se.impl.orb.ORBConfiguratorImpl.ConfigParser;
+import java.io.IOException;
 
 import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import waterRowerClient.DataRecord.DataRecordValueType;
 
-public class CircleMeter implements Runnable {
+public class CircleMeter implements Runnable, DataNotifier {
 
 	private Circle c;
 	int duration=ClientConfig.getIntOptionValue("animationDuration", 1000);
+	private DataRecordValueType radius_valueType;
+	private DataRecordValueType color_valueType;
 
 	public CircleMeter ( Circle c) {
 		this.c=c;
 	}
 	
+	private int radius_midValue=30;
+	private int radius_currentValue=0;
+	
+	private int color_midValue=27;
+	private int color_currentValue=0;
+
 	public int getDuration() {
 		return duration;
 	}
-
-
-
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
 
-
 	public int getRadius_midValue() {
 		return radius_midValue;
 	}
-
-
-
 	public void setRadius_midValue(int radius_midValue) {
 		this.radius_midValue = radius_midValue;
 	}
-
-
-
+	public void setRadius_DataRecordValueType(DataRecordValueType vt) {
+		this.radius_valueType = vt;
+	}
+	public DataRecordValueType getRadius_DataRecordValueType() {
+		return radius_valueType;
+	}
 	public int getRadius_currentValue() {
 		return radius_currentValue;
 	}
-
-
-
 	public void setRadius_currentValue(int radius_currentValue) {
 		this.radius_currentValue = radius_currentValue;
 	}
 
-
-
 	public int getColor_midValue() {
 		return color_midValue;
 	}
-
-
-
 	public void setColor_midValue(int color_midValue) {
 		this.color_midValue = color_midValue;
 	}
-
-
-
+	public void setColor_DataRecordValueType(DataRecordValueType vt) {
+		this.color_valueType = vt;
+	}
+	public DataRecordValueType getColor_DataRecordValueType() {
+		return color_valueType;
+	}
 	public int getColor_currentValue() {
 		return color_currentValue;
 	}
-
-
-
 	public void setColor_currentValue(int color_currentValue) {
 		this.color_currentValue = color_currentValue;
 	}
-
-	int radius_midValue=30;
-	int radius_currentValue=0;
-	
-	int color_midValue=27;
-	int color_currentValue=0;
-	
-	
 
 	@Override
 	public void run() {
@@ -118,13 +105,13 @@ public class CircleMeter implements Runnable {
 
 		ParallelTransition transition_green = new ParallelTransition(c, 
 				/*translate,*/ fill, rotate, scale_max); 
-		transition_green.setCycleCount(Timeline.INDEFINITE);
-		transition_green.setAutoReverse(true); 
+//		transition_green.setCycleCount(Timeline.INDEFINITE);
+//		transition_green.setAutoReverse(true); 
 
 		ParallelTransition transition_red = new ParallelTransition(c, 
 				/*translate,*/ fill_red, rotate, scale_min); 
-		transition_red.setCycleCount(Timeline.INDEFINITE);
-		transition_red.setAutoReverse(true); 
+//		transition_red.setCycleCount(Timeline.INDEFINITE);
+//		transition_red.setAutoReverse(true); 
 
 		int state=0;
 
@@ -147,6 +134,30 @@ public class CircleMeter implements Runnable {
 
 		}
 
+	}
+
+	@Override
+	public void readEvent(String rawData) throws IOException {
+		
+		if( !DataRecord.isDataRecord(rawData)) {
+			return;
+		}
+		
+		DataRecord dr=null;
+		try {
+			dr=DataRecord.getDataRecord(rawData);
+		} catch (DataRecordException e) {
+			System.err.println( "Exception caught parsing data record: "+e.getLocalizedMessage());
+			return;
+		}
+		
+		int colorVal=dr.getValue( color_valueType);
+		setColor_currentValue(color_currentValue);
+		
+
+		int radiusVal=dr.getValue( radius_valueType);
+		setRadius_currentValue(radius_currentValue);
+		
 	}
 
 }
