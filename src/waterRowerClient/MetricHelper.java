@@ -5,7 +5,7 @@ import waterRowerClient.DataRecord.DataRecordValueType;
 
 public class MetricHelper {
 	
-	public static int deltaProzent=30;
+	public static double deltaProzent=0.3;
 
 	public static int getMidValue(DataRecordValueType vt) {
 		switch (vt) {
@@ -36,7 +36,7 @@ public class MetricHelper {
 		double blue=0.0;
 		double opacity=1.0;
 		int midColorValue=MetricHelper.getMidValue(color_valueType);
-		int maxDifference=midColorValue*deltaProzent/100;
+		int maxDifference=(int) (midColorValue*deltaProzent);
 		if( colorVal>(midColorValue+maxDifference)) {
 			colorVal=maxDifference;
 		} else if (colorVal<(midColorValue-maxDifference)) {
@@ -60,9 +60,15 @@ public class MetricHelper {
 		return color;
 	}
 
-	public static int getRadius(DataRecordValueType radius_valueType, int radius_currentValue) {
-		// TODO Auto-generated method stub
-		return 0;
+	public static double getRadiusMultiplier(DataRecordValueType radius_valueType, int radius_currentValue) {
+		double multiplier=getMidValue( radius_valueType)
+				+(getMidValue( radius_valueType)-radius_currentValue)/getMidValue( radius_valueType);
+		if( multiplier<(1.0-deltaProzent)) {
+			return (1.0-deltaProzent);
+		} else if( multiplier>(1.0+deltaProzent)) {
+			return (1.0+deltaProzent);
+		} 
+		return deltaProzent;
 	}
 
 }

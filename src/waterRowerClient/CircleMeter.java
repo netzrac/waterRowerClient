@@ -22,10 +22,7 @@ public class CircleMeter implements Runnable, DataNotifier {
 		this.c=c;
 	}
 	
-	private int radius_midValue=30;
-	private int radius_currentValue=0;
-	
-	private int color_midValue=27;
+	private double radius_currentMultiplier=0;
 	private Color color_currentValue=Color.YELLOW;
 
 	public int getDuration() {
@@ -44,16 +41,15 @@ public class CircleMeter implements Runnable, DataNotifier {
 //	}
 	public void setRadius_DataRecordValueType(DataRecordValueType vt) {
 		this.radius_valueType = vt;
-		radius_midValue=MetricHelper.getMidValue( vt);
 	}
 	public DataRecordValueType getRadius_DataRecordValueType() {
 		return radius_valueType;
 	}
-	public int getRadius_currentValue() {
-		return radius_currentValue;
+	public double getRadiusMultiplier() {
+		return radius_currentMultiplier;
 	}
-	public void setRadius_currentValue(int radius_currentValue) {
-		this.radius_currentValue = radius_currentValue;
+	public void setRadiusMultiplier(double multiplier) {
+		this.radius_currentMultiplier= multiplier;
 	}
 
 //	public int getColor_midValue() {
@@ -64,7 +60,6 @@ public class CircleMeter implements Runnable, DataNotifier {
 //	}
 	public void setColor_DataRecordValueType(DataRecordValueType vt) {
 		this.color_valueType = vt;
-		color_midValue=MetricHelper.getMidValue( vt);
 	}
 	public DataRecordValueType getColor_DataRecordValueType() {
 		return color_valueType;
@@ -149,7 +144,7 @@ public class CircleMeter implements Runnable, DataNotifier {
 		
 
 		int radiusVal=dr.getValue( radius_valueType);
-		setRadius_currentValue(MetricHelper.getRadius( radius_valueType, radiusVal));
+		setRadiusMultiplier(MetricHelper.getRadiusMultiplier( radius_valueType, radiusVal));
 		
 	}
 
