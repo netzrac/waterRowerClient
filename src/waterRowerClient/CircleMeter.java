@@ -26,7 +26,7 @@ public class CircleMeter implements Runnable, DataNotifier {
 	private int radius_currentValue=0;
 	
 	private int color_midValue=27;
-	private int color_currentValue=0;
+	private Color color_currentValue=Color.YELLOW;
 
 	public int getDuration() {
 		return duration;
@@ -36,14 +36,15 @@ public class CircleMeter implements Runnable, DataNotifier {
 	}
 
 
-	public int getRadius_midValue() {
-		return radius_midValue;
-	}
-	public void setRadius_midValue(int radius_midValue) {
-		this.radius_midValue = radius_midValue;
-	}
+//	public int getRadius_midValue() {
+//		return radius_midValue;
+//	}
+//	public void setRadius_midValue(int radius_midValue) {
+//		this.radius_midValue = radius_midValue;
+//	}
 	public void setRadius_DataRecordValueType(DataRecordValueType vt) {
 		this.radius_valueType = vt;
+		radius_midValue=MetricHelper.getMidValue( vt);
 	}
 	public DataRecordValueType getRadius_DataRecordValueType() {
 		return radius_valueType;
@@ -55,37 +56,29 @@ public class CircleMeter implements Runnable, DataNotifier {
 		this.radius_currentValue = radius_currentValue;
 	}
 
-	public int getColor_midValue() {
-		return color_midValue;
-	}
-	public void setColor_midValue(int color_midValue) {
-		this.color_midValue = color_midValue;
-	}
+//	public int getColor_midValue() {
+//		return color_midValue;
+//	}
+//	public void setColor_midValue(int color_midValue) {
+//		this.color_midValue = color_midValue;
+//	}
 	public void setColor_DataRecordValueType(DataRecordValueType vt) {
 		this.color_valueType = vt;
+		color_midValue=MetricHelper.getMidValue( vt);
 	}
 	public DataRecordValueType getColor_DataRecordValueType() {
 		return color_valueType;
 	}
-	public int getColor_currentValue() {
+	public Color getColor_currentValue() {
 		return color_currentValue;
 	}
-	public void setColor_currentValue(int color_currentValue) {
+	public void setColor_currentValue(Color color_currentValue) {
 		this.color_currentValue = color_currentValue;
 	}
 
 	@Override
 	public void run() {
 
-		// GREEN  #008000
-		// YELLOW #FFFF00
-		// RED    #FF0000
-		double red=0;
-		double green=0;
-		double blue=0;
-		double opacity=0;
-		Color color=new Color( red, green, blue, opacity);
-		
 		FillTransition fill = new FillTransition(Duration.millis(duration)); 
 		fill.setToValue(Color.GREEN); 
 
@@ -152,11 +145,11 @@ public class CircleMeter implements Runnable, DataNotifier {
 		}
 		
 		int colorVal=dr.getValue( color_valueType);
-		setColor_currentValue(color_currentValue);
+		setColor_currentValue(MetricHelper.getColor( color_valueType, colorVal));
 		
 
 		int radiusVal=dr.getValue( radius_valueType);
-		setRadius_currentValue(radius_currentValue);
+		setRadius_currentValue(MetricHelper.getRadius( radius_valueType, radiusVal));
 		
 	}
 
