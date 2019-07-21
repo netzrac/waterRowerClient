@@ -4,26 +4,58 @@ import java.io.IOException;
 
 import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import waterRowerClient.DataRecord.DataRecordValueType;
 
-public class CircleMeter implements Runnable, DataNotifier {
+public class CircleMeter  implements DataNotifier {
 
 	private Circle c;
-	int duration=ClientConfig.getIntOptionValue("animationDuration", 1000);
-	private DataRecordValueType radius_valueType;
+	int duration=ClientConfig.getIntOptionValue("animationDuration", 2000);
+	private DataRecordValueType radiusX_valueType;
+	private DataRecordValueType radiusY_valueType;
 	private DataRecordValueType color_valueType;
+	private StdVBox left;
+	private StdVBox right;
+	private StdHBox top;
 
 	public CircleMeter ( Circle c) {
 		this.c=c;
+		cmInit();
 	}
-	
-	private double radius_currentMultiplier=0;
+		
+	public CircleMeter(Circle c, StdVBox leftBox, StdHBox topBox, StdVBox rightBox) {
+		this.left=leftBox;
+		this.right=rightBox;
+		this.top=topBox;
+		this.c=c;
+		cmInit();
+	}
+
+	private void cmInit() {
+		setRadiusX_DataRecordValueType(DataRecordValueType.SPM);
+		setRadiusY_DataRecordValueType(DataRecordValueType.CURR500M_SECS);
+		setColor_DataRecordValueType(DataRecordValueType.WATT);
+		
+		fill = new FillTransition(Duration.millis(duration)); 
+		fill.setToValue(color_currentValue); 
+
+		scale = new ScaleTransition(Duration.millis(duration)); 
+		scale.setToX( radiusX_currentMultiplier); 
+		scale.setToY( radiusY_currentMultiplier); 
+
+		transition = new ParallelTransition(c, fill, scale); 
+	}
+
 	private Color color_currentValue=Color.YELLOW;
+	private double radiusX_currentMultiplier=1.0;
+	private double radiusY_currentMultiplier=1.0;
+	private FillTransition fill;
+	private ParallelTransition transition;
+	private ScaleTransition scale;
 
 	public int getDuration() {
 		return duration;
@@ -32,34 +64,36 @@ public class CircleMeter implements Runnable, DataNotifier {
 		this.duration = duration;
 	}
 
+	public void setRadiusX_DataRecordValueType(DataRecordValueType vt) {
+		this.radiusX_valueType = vt;
+		left.setLabel(MetricHelper.getLabel(vt));
+	}
+	public void setRadiusY_DataRecordValueType(DataRecordValueType vt) {
+		this.radiusY_valueType = vt;
+		top.setLabel(MetricHelper.getLabel(vt));
+	}
+	public DataRecordValueType getRadiusX_DataRecordValueType() {
+		return radiusX_valueType;
+	}
+	public DataRecordValueType getRadiusY_DataRecordValueType() {
+		return radiusY_valueType;
+	}
+	public double getRadiusXMultiplier() {
+		return radiusX_currentMultiplier;
+	}
+	public void setRadiusXMultiplier(double multiplier) {
+		this.radiusX_currentMultiplier= multiplier;
+	}
+	public double getRadiusYMultiplier() {
+		return radiusY_currentMultiplier;
+	}
+	public void setRadiusYMultiplier(double multiplier) {
+		this.radiusY_currentMultiplier= multiplier;
+	}
 
-//	public int getRadius_midValue() {
-//		return radius_midValue;
-//	}
-//	public void setRadius_midValue(int radius_midValue) {
-//		this.radius_midValue = radius_midValue;
-//	}
-	public void setRadius_DataRecordValueType(DataRecordValueType vt) {
-		this.radius_valueType = vt;
-	}
-	public DataRecordValueType getRadius_DataRecordValueType() {
-		return radius_valueType;
-	}
-	public double getRadiusMultiplier() {
-		return radius_currentMultiplier;
-	}
-	public void setRadiusMultiplier(double multiplier) {
-		this.radius_currentMultiplier= multiplier;
-	}
-
-//	public int getColor_midValue() {
-//		return color_midValue;
-//	}
-//	public void setColor_midValue(int color_midValue) {
-//		this.color_midValue = color_midValue;
-//	}
 	public void setColor_DataRecordValueType(DataRecordValueType vt) {
 		this.color_valueType = vt;
+		right.setLabel(MetricHelper.getLabel(vt));
 	}
 	public DataRecordValueType getColor_DataRecordValueType() {
 		return color_valueType;
@@ -71,56 +105,19 @@ public class CircleMeter implements Runnable, DataNotifier {
 		this.color_currentValue = color_currentValue;
 	}
 
-	@Override
-	public void run() {
+	public void startTransition() {
 
-		FillTransition fill = new FillTransition(Duration.millis(duration)); 
-		fill.setToValue(Color.GREEN); 
+		System.out.println( "Color: "+color_currentValue+", Radius: "
+				+radiusX_currentMultiplier+"/"+radiusY_currentMultiplier);
+		
+		transition.stop();
+		
+		fill.setToValue(color_currentValue); 
 
-		FillTransition fill_red = new FillTransition(Duration.millis(duration)); 
-		fill_red.setToValue(Color.RED); 
+		scale.setToX( radiusX_currentMultiplier); 
+		scale.setToY( radiusY_currentMultiplier); 
 
-		RotateTransition rotate = new RotateTransition(Duration.millis(duration)); 
-		rotate.setToAngle(360); 
-
-		ScaleTransition scale_min = new ScaleTransition(Duration.millis(duration)); 
-		scale_min.setToX(0.5); 
-		scale_min.setToY(0.5); 
-
-		ScaleTransition scale_max = new ScaleTransition(Duration.millis(duration)); 
-		scale_max.setToX(1.5); 
-		scale_max.setToY(1.5); 
-
-		ParallelTransition transition_green = new ParallelTransition(c, 
-				/*translate,*/ fill, rotate, scale_max); 
-//		transition_green.setCycleCount(Timeline.INDEFINITE);
-//		transition_green.setAutoReverse(true); 
-
-		ParallelTransition transition_red = new ParallelTransition(c, 
-				/*translate,*/ fill_red, rotate, scale_min); 
-//		transition_red.setCycleCount(Timeline.INDEFINITE);
-//		transition_red.setAutoReverse(true); 
-
-		int state=0;
-
-		while( true) {
-
-			if( state==0) {
-				transition_green.stop();
-				transition_red.play();
-				state=1;
-			} else {
-				transition_red.stop();
-				transition_green.play();
-				state=0;
-			}
-
-			try {
-				Thread.sleep(2*duration);
-			} catch (InterruptedException e) {
-			}
-
-		}
+		transition.play();
 
 	}
 
@@ -135,17 +132,29 @@ public class CircleMeter implements Runnable, DataNotifier {
 		try {
 			dr=DataRecord.getDataRecord(rawData);
 		} catch (DataRecordException e) {
-			System.err.println( "Exception caught parsing data record: "+e.getLocalizedMessage());
+			// No data record
 			return;
 		}
 		
-		int colorVal=dr.getValue( color_valueType);
-		setColor_currentValue(MetricHelper.getColor( color_valueType, colorVal));
-		
 
-		int radiusVal=dr.getValue( radius_valueType);
-		setRadiusMultiplier(MetricHelper.getRadiusMultiplier( radius_valueType, radiusVal));
+		int colorVal=dr.getValue( color_valueType);
+		right.setCurrValue(dr.getStringValue(color_valueType));
+		right.setMidValue(MetricHelper.getMidValueString(color_valueType, dr.getLevel()));
+		setColor_currentValue(MetricHelper.getColor( color_valueType, dr.getLevel(), colorVal));
+
+		int radiusYVal=dr.getValue( radiusY_valueType);
+		top.setCurrValue(dr.getStringValue(radiusY_valueType));
+		top.setMidValue(MetricHelper.getMidValueString(radiusY_valueType, dr.getLevel()));
+		setRadiusYMultiplier(MetricHelper.getRadiusMultiplier( radiusY_valueType, dr.getLevel(), radiusYVal));
 		
+		int radiusXVal=dr.getValue( radiusX_valueType);
+		left.setCurrValue(dr.getStringValue(radiusX_valueType));
+		left.setMidValue(MetricHelper.getMidValueString(radiusX_valueType, dr.getLevel()));
+		setRadiusXMultiplier(MetricHelper.getRadiusMultiplier( radiusX_valueType, dr.getLevel(), radiusXVal));
+		
+		System.out.println( "Color: "+colorVal+", Radius: "+radiusXVal+"/"+radiusYVal);
+
+		startTransition();
 	}
 
 }

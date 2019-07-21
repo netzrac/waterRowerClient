@@ -46,6 +46,28 @@ public class DataRecord {
 		return Integer.MAX_VALUE;
 	}
 	
+	public String getStringValue( DataRecordValueType vt) {
+		switch (vt) {
+		case TOTAL_DIST: 
+			return String.valueOf(getTotalDistance());
+		case TOTAL_SECS:
+			//return new String(String.valueOf(getTotalSeconds()/60)+":"+String.valueOf(getTotalSeconds()%60));
+			return String.format("%d:%02d", getTotalSeconds()/60, getTotalSeconds()%60);
+		case CURR500M_SECS:
+			//return new String(String.valueOf(getCurr500mSeconds()/60)+":"+String.valueOf(getCurr500mSeconds()%60));
+			return String.format("%d:%02d", getCurr500mSeconds()/60, getCurr500mSeconds()%60);
+		case SPM:
+			return String.valueOf(getSpm());
+		case WATT:
+			return String.valueOf(getWatt());
+		case CAL_HR:
+			return String.valueOf(getCalPerHr());
+		case LEVEL:
+			return String.valueOf(getLevel());
+		}
+		return "UNKNOWN";
+	}
+	
 	public int getTotalSeconds() {
 		return (Integer.parseInt( rawData.substring(3,5))*60
 				+ Integer.parseInt( rawData.substring(5,7)));
@@ -85,7 +107,7 @@ public class DataRecord {
 				rawData.substring(27,29)));		
 	}
 
-	private String rawData;
+	private String rawData=null;
 	
 	public static String dataId="A80"; 
 
@@ -107,7 +129,7 @@ public class DataRecord {
 		if( isDataRecord(s)) {
 			return new DataRecord( s);
 		} else {
-			return null;
+			throw new DataRecordException("No data record.");
 		}
 	}
 

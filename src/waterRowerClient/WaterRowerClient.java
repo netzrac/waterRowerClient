@@ -2,8 +2,12 @@ package waterRowerClient;
 
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class WaterRowerClient extends Application {
@@ -12,6 +16,13 @@ public class WaterRowerClient extends Application {
 	private Client client;
 	private SessionRecorder sessionRecorder;
 	private MonitorTextArea ta;
+	private CircleMeter cm;
+	private Circle c;
+	private StdHBox topBox;
+	private StdVBox leftBox;
+	private StdVBox rightBox;
+	private GridPane centerPane;
+	private VBox bottomBox;
 
 	public void init() throws Exception {
 		// init Application
@@ -26,6 +37,7 @@ public class WaterRowerClient extends Application {
 		client.sendCommand( Client.Commands.CMD_RESET);
 		sessionRecorder =new SessionRecorder();
 		client.registerNotifier(sessionRecorder);
+		client.registerNotifier(cm);
 		ta.clear();
 		client.registerNotifier(ta);
 		sessionRecorder.start();
@@ -34,6 +46,7 @@ public class WaterRowerClient extends Application {
 	public void stopRecording() throws IOException {
 		sessionRecorder.stop();
 		client.unregisterNotifier(sessionRecorder);
+		client.unregisterNotifier(cm);
 		client.unregisterNotifier(ta);
 	}
 
@@ -46,15 +59,50 @@ public class WaterRowerClient extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-        primaryStage.setTitle("Hello World!");
+		// Title
+        primaryStage.setTitle("Hello rower!");
+
+        // Button 
         StartStopButton btn = new StartStopButton(this);
+        btn.setAlignment(Pos.CENTER);
         
+        bottomBox=new VBox();
+        bottomBox.setStyle("-fx-background-color: #d3d3d3;");
+        bottomBox.getChildren().add(btn);
+        bottomBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(10);
+
+        // Monitor Area
         ta=new MonitorTextArea();
+
+        // TextBoxes
+        topBox=new StdHBox(" ");
+        leftBox=new StdVBox(" ");
+        rightBox=new StdVBox(" ");
         
-        StackPane root = new StackPane();
-        root.getChildren().add(ta);
-        root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
+        centerPane=new GridPane();
+	    centerPane.setStyle("-fx-background-color: #d3d3d3;");
+	    centerPane.setPrefSize(1200, 1200);
+        
+		// Start Circlemeter
+		c = new Circle( 400, 400, 100);
+        cm=new CircleMeter(c, leftBox, topBox, rightBox);
+        
+	    centerPane.setPrefSize(1200, 1200);
+	    centerPane.setAlignment(Pos.CENTER);
+        centerPane.getChildren().add(c);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(centerPane);
+        borderPane.setTop(topBox);
+        BorderPane.setAlignment(topBox, Pos.CENTER);
+        borderPane.setLeft(leftBox);
+        BorderPane.setAlignment(leftBox, Pos.CENTER);
+        borderPane.setRight(rightBox);
+        BorderPane.setAlignment(rightBox, Pos.CENTER);
+        borderPane.setBottom(bottomBox);
+        BorderPane.setAlignment(bottomBox, Pos.CENTER);
+        primaryStage.setScene(new Scene(borderPane, 600, 600));
         primaryStage.show();	
         
 	}
