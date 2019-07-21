@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -15,7 +16,6 @@ public class WaterRowerClient extends Application {
 	private Thread clientThread;
 	private Client client;
 	private SessionRecorder sessionRecorder;
-	private MonitorTextArea ta;
 	private CircleMeter cm;
 	private Circle c;
 	private StdHBox topBox;
@@ -23,6 +23,11 @@ public class WaterRowerClient extends Application {
 	private StdVBox rightBox;
 	private GridPane centerPane;
 	private VBox bottomBox;
+	private DefaultNotifier dn;
+	private StdHBox levelBox;
+	private StdHBox distBox;
+	private StdHBox timeBox;
+	private HBox stdValBox;
 
 	public void init() throws Exception {
 		// init Application
@@ -38,8 +43,6 @@ public class WaterRowerClient extends Application {
 		sessionRecorder =new SessionRecorder();
 		client.registerNotifier(sessionRecorder);
 		client.registerNotifier(cm);
-		ta.clear();
-		client.registerNotifier(ta);
 		sessionRecorder.start();
 	}
 	
@@ -47,7 +50,6 @@ public class WaterRowerClient extends Application {
 		sessionRecorder.stop();
 		client.unregisterNotifier(sessionRecorder);
 		client.unregisterNotifier(cm);
-		client.unregisterNotifier(ta);
 	}
 
 	public static void main(String[] args) {
@@ -62,23 +64,10 @@ public class WaterRowerClient extends Application {
 		// Title
         primaryStage.setTitle("Hello rower!");
 
-        // Button 
-        StartStopButton btn = new StartStopButton(this);
-        btn.setAlignment(Pos.CENTER);
-        
-        bottomBox=new VBox();
-        bottomBox.setStyle("-fx-background-color: #d3d3d3;");
-        bottomBox.getChildren().add(btn);
-        bottomBox.setAlignment(Pos.CENTER);
-        bottomBox.setSpacing(10);
-
-        // Monitor Area
-        ta=new MonitorTextArea();
-
-        // TextBoxes
-        topBox=new StdHBox(" ");
-        leftBox=new StdVBox(" ");
-        rightBox=new StdVBox(" ");
+      // TextBoxes
+        topBox=new StdHBox(" ", 24);
+        leftBox=new StdVBox(" ",24);
+        rightBox=new StdVBox(" ",24);
         
         centerPane=new GridPane();
 	    centerPane.setStyle("-fx-background-color: #d3d3d3;");
@@ -92,6 +81,36 @@ public class WaterRowerClient extends Application {
 	    centerPane.setAlignment(Pos.CENTER);
         centerPane.getChildren().add(c);
 
+
+        // Button 
+        StartStopButton btn = new StartStopButton(this);
+        btn.setAlignment(Pos.CENTER);
+        
+        // Standard Values
+        levelBox=new StdHBox("LVL", 24);
+        distBox=new StdHBox("DIST", 24);
+        timeBox=new StdHBox("TIME", 24);
+
+        // Standard values Box
+        stdValBox=new HBox();
+        stdValBox.setAlignment(Pos.CENTER);
+        stdValBox.getChildren().addAll(levelBox, distBox, timeBox);
+
+        dn=new DefaultNotifier(levelBox, distBox, timeBox);
+        client.registerNotifier(dn);
+
+        // Bottom Box
+        
+        bottomBox=new VBox();
+        bottomBox.setStyle("-fx-background-color: #d3d3d3;");
+        
+        bottomBox.getChildren().addAll(stdValBox, btn);
+        
+        bottomBox.setAlignment(Pos.CENTER);
+        bottomBox.setSpacing(10);
+
+        // create BorderPane
+        
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(centerPane);
         borderPane.setTop(topBox);
@@ -102,7 +121,7 @@ public class WaterRowerClient extends Application {
         BorderPane.setAlignment(rightBox, Pos.CENTER);
         borderPane.setBottom(bottomBox);
         BorderPane.setAlignment(bottomBox, Pos.CENTER);
-        primaryStage.setScene(new Scene(borderPane, 600, 600));
+        primaryStage.setScene(new Scene(borderPane, 450, 450));
         primaryStage.show();	
         
 	}

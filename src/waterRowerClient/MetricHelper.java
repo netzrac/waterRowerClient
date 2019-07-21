@@ -42,7 +42,7 @@ public class MetricHelper {
 			return String.valueOf(getMidValue(vt, level));
 		case TOTAL_SECS:
 		case CURR500M_SECS:
-			return String.format("%d:%02d", getMidValue(vt, level)/60, getMidValue(vt, level)%60);
+			return String.format("%02d:%02d", getMidValue(vt, level)/60, getMidValue(vt, level)%60);
 		}
 
 		return "UNKNOWN";	

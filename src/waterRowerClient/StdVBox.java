@@ -1,6 +1,7 @@
 package waterRowerClient;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -33,15 +34,25 @@ public class StdVBox extends VBox {
 
 	public StdVBox(String labelText) {
 		super();
-	    setPadding(new Insets(15, 12, 15, 12));
+		initBox( labelText, 36);
+	}
+	
+	public StdVBox(String labelText, int fontSize) {
+		super();
+		initBox( labelText, fontSize);
+	}
+	
+	private void initBox(String labelText, int fontSize) {
+		setPadding(new Insets(15, 12, 15, 12));
+		setAlignment(Pos.CENTER);
 	    setSpacing(10);
 	    setStyle("-fx-background-color: #d3d3d3;");
-		label=new Text( "");
-		label.setFont(Font.font ("Verdana", 36));
+		label=new Text( labelText);
+		label.setFont(Font.font ("Verdana", fontSize));
 		currValue=new Text( "");
-		currValue.setFont(Font.font ("Verdana", 36));
+		currValue.setFont(Font.font ("Verdana", fontSize));
 		midValue=new Text( "");
-		midValue.setFont(Font.font ("Verdana", 20));
+		midValue.setFont(Font.font ("Verdana", fontSize*2/3));
 		getChildren().addAll( label, currValue, midValue);
 	}
 

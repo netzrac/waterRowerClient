@@ -52,10 +52,10 @@ public class DataRecord {
 			return String.valueOf(getTotalDistance());
 		case TOTAL_SECS:
 			//return new String(String.valueOf(getTotalSeconds()/60)+":"+String.valueOf(getTotalSeconds()%60));
-			return String.format("%d:%02d", getTotalSeconds()/60, getTotalSeconds()%60);
+			return String.format("%02d:%02d", getTotalSeconds()/60, getTotalSeconds()%60);
 		case CURR500M_SECS:
 			//return new String(String.valueOf(getCurr500mSeconds()/60)+":"+String.valueOf(getCurr500mSeconds()%60));
-			return String.format("%d:%02d", getCurr500mSeconds()/60, getCurr500mSeconds()%60);
+			return String.format("%02d:%02d", getCurr500mSeconds()/60, getCurr500mSeconds()%60);
 		case SPM:
 			return String.valueOf(getSpm());
 		case WATT:
