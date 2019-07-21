@@ -9,6 +9,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class WaterRowerClient extends Application {
@@ -28,6 +30,11 @@ public class WaterRowerClient extends Application {
 	private StdHBox distBox;
 	private StdHBox timeBox;
 	private HBox stdValBox;
+	private Text commandText;
+	private HBox btnHBox;
+	private StartStopButton startStopBtn;
+	private TrainingButton trainingBtn;
+	private Trainer trainer;
 
 	public void init() throws Exception {
 		// init Application
@@ -39,6 +46,9 @@ public class WaterRowerClient extends Application {
 	}
 	
 	public void startRecording() throws IOException {
+		if(!startStopBtn.isDisable()) {
+			trainingBtn.setDisable(true);
+		}
 		client.sendCommand( Client.Commands.CMD_RESET);
 		sessionRecorder =new SessionRecorder();
 		client.registerNotifier(sessionRecorder);
@@ -47,9 +57,26 @@ public class WaterRowerClient extends Application {
 	}
 	
 	public void stopRecording() throws IOException {
+		if(trainingBtn.isDisable()) {
+			trainingBtn.setDisable(false);
+		}
 		sessionRecorder.stop();
 		client.unregisterNotifier(sessionRecorder);
 		client.unregisterNotifier(cm);
+	}
+	
+	public void startTraining() throws IOException {
+		startStopBtn.setDisable(true);
+		client.registerNotifier(trainer);
+		trainer.startTraining();
+		startRecording();
+	}
+	
+	public void stopTraining() throws IOException {
+		startStopBtn.setDisable(false);
+		stopRecording();
+		trainer.stopTraining();
+		client.unregisterNotifier(trainer);
 	}
 
 	public static void main(String[] args) {
@@ -63,6 +90,12 @@ public class WaterRowerClient extends Application {
 		
 		// Title
         primaryStage.setTitle("Hello rower!");
+        
+        // Trainer + Command Box
+        commandText=new Text( "No active training.");
+        commandText.setFont(Font.font ("Verdana", 18));
+        
+        trainer=new Trainer(commandText);
 
       // TextBoxes
         topBox=new StdHBox(" ", 24);
@@ -82,9 +115,17 @@ public class WaterRowerClient extends Application {
         centerPane.getChildren().add(c);
 
 
-        // Button 
-        StartStopButton btn = new StartStopButton(this);
-        btn.setAlignment(Pos.CENTER);
+        // Buttons
+        
+        startStopBtn = new StartStopButton(this);
+        startStopBtn.setAlignment(Pos.CENTER);
+        
+        trainingBtn = new TrainingButton(this);
+        trainingBtn.setAlignment(Pos.CENTER);
+
+        btnHBox=new HBox();
+        btnHBox.setAlignment(Pos.CENTER);
+        btnHBox.getChildren().addAll(startStopBtn, trainingBtn);
         
         // Standard Values
         levelBox=new StdHBox("LVL", 24);
@@ -104,7 +145,7 @@ public class WaterRowerClient extends Application {
         bottomBox=new VBox();
         bottomBox.setStyle("-fx-background-color: #d3d3d3;");
         
-        bottomBox.getChildren().addAll(stdValBox, btn);
+        bottomBox.getChildren().addAll(commandText, stdValBox, btnHBox);
         
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setSpacing(10);
@@ -121,7 +162,7 @@ public class WaterRowerClient extends Application {
         BorderPane.setAlignment(rightBox, Pos.CENTER);
         borderPane.setBottom(bottomBox);
         BorderPane.setAlignment(bottomBox, Pos.CENTER);
-        primaryStage.setScene(new Scene(borderPane, 450, 450));
+        primaryStage.setScene(new Scene(borderPane, 450, 540));
         primaryStage.show();	
         
 	}

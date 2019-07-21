@@ -22,11 +22,13 @@ public class CircleMeter  implements DataNotifier {
 	private StdVBox right;
 	private StdHBox top;
 
+	/**
 	public CircleMeter ( Circle c) {
 		this.c=c;
 		cmInit();
 	}
-		
+	**/
+	
 	public CircleMeter(Circle c, StdVBox leftBox, StdHBox topBox, StdVBox rightBox) {
 		this.left=leftBox;
 		this.right=rightBox;
