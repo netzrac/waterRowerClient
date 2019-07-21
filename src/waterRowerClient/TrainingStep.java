@@ -30,4 +30,8 @@ public class TrainingStep {
 		return( currWatt>=watt)?true:false;
 	}
 
+	public int getRemaining(int currDistance) {
+		return baseDistance+distance-currDistance;
+	}
+
 }

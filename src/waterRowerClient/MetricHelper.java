@@ -8,7 +8,7 @@ public class MetricHelper {
 	public static double deltaProzent=0.9;
 
 	static int midCurr500MSecs[] = { 230, 180, 150, 120};
-	static int midWatt[] = { 30, 60, 90, 120};
+	static int midWatt[] = { 25, 50, 75, 100};
 	static int midCalHr[] = { 400, 500, 600, 700};
 
 	public static int getMidValue(DataRecordValueType vt, int level) {

@@ -35,6 +35,8 @@ public class WaterRowerClient extends Application {
 	private StartStopButton startStopBtn;
 	private TrainingButton trainingBtn;
 	private Trainer trainer;
+	private Text commandRemain;
+	private HBox commandRemainHBox;
 
 	public void init() throws Exception {
 		// init Application
@@ -74,6 +76,7 @@ public class WaterRowerClient extends Application {
 	
 	public void stopTraining() throws IOException {
 		startStopBtn.setDisable(false);
+		commandRemain.setText("");
 		stopRecording();
 		trainer.stopTraining();
 		client.unregisterNotifier(trainer);
@@ -93,27 +96,33 @@ public class WaterRowerClient extends Application {
         
         // Trainer + Command Box
         commandText=new Text( "No active training.");
-        commandText.setFont(Font.font ("Verdana", 18));
+        commandText.setFont(Font.font ("Verdana", 27));
+        commandRemain=new Text( "");
+        commandRemainHBox=new HBox();
+        commandRemainHBox.setAlignment(Pos.CENTER);
+        commandRemainHBox.getChildren().add(commandRemain);
+        commandRemain.setFont(Font.font ("Verdana", 36));
         
-        trainer=new Trainer(commandText);
+        trainer=new Trainer(commandText, commandRemain);
 
       // TextBoxes
-        topBox=new StdHBox(" ", 24);
-        leftBox=new StdVBox(" ",24);
-        rightBox=new StdVBox(" ",24);
+        topBox=new StdHBox(" ", 36);
+        leftBox=new StdVBox(" ",36);
+        rightBox=new StdVBox(" ",36);
         
         centerPane=new GridPane();
 	    centerPane.setStyle("-fx-background-color: #d3d3d3;");
 	    centerPane.setPrefSize(1200, 1200);
         
 		// Start Circlemeter
-		c = new Circle( 400, 400, 100);
+		c = new Circle( 600, 600, 100);
         cm=new CircleMeter(c, leftBox, topBox, rightBox);
         
-	    centerPane.setPrefSize(1200, 1200);
+	    centerPane.setPrefSize(600, 600);
+        //centerPane.getChildren().addAll(c, commandRemain);
+	    centerPane.add(c, 0, 0);
+	    centerPane.add( commandRemainHBox, 0, 0);
 	    centerPane.setAlignment(Pos.CENTER);
-        centerPane.getChildren().add(c);
-
 
         // Buttons
         
@@ -128,9 +137,9 @@ public class WaterRowerClient extends Application {
         btnHBox.getChildren().addAll(startStopBtn, trainingBtn);
         
         // Standard Values
-        levelBox=new StdHBox("LVL", 24);
-        distBox=new StdHBox("DIST", 24);
-        timeBox=new StdHBox("TIME", 24);
+        levelBox=new StdHBox("LVL", 36);
+        distBox=new StdHBox("DIST", 36);
+        timeBox=new StdHBox("TIME", 36);
 
         // Standard values Box
         stdValBox=new HBox();
@@ -162,7 +171,7 @@ public class WaterRowerClient extends Application {
         BorderPane.setAlignment(rightBox, Pos.CENTER);
         borderPane.setBottom(bottomBox);
         BorderPane.setAlignment(bottomBox, Pos.CENTER);
-        primaryStage.setScene(new Scene(borderPane, 450, 540));
+        primaryStage.setScene(new Scene(borderPane, 720, 720));
         primaryStage.show();	
         
 	}

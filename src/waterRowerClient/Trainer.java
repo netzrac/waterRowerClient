@@ -22,11 +22,13 @@ public class Trainer implements DataNotifier {
 	private boolean initStep=true;
 	
 	boolean trainingFinished=false;
+	private Text commandRemain;
 	
-	public Trainer(Text commandText) {
+	public Trainer(Text commandText, Text commandRemain) {
 		this.commandText=commandText;
+		this.commandRemain=commandRemain;
 		// L1 1000m
-		steps.add( new TrainingStep( 1, 1000, 30));
+		steps.add( new TrainingStep( 1, 1000, 25));
 		// L2 500m
 		steps.add( new TrainingStep( 2, 300, 45));
 		steps.add( new TrainingStep( 2, 100, 50));
@@ -44,14 +46,14 @@ public class Trainer implements DataNotifier {
 		// L2 500m
 		steps.add( new TrainingStep( 2, 500, 50));
 		// L1 500m
-		steps.add( new TrainingStep( 1, 500, 30));
+		steps.add( new TrainingStep( 1, 500, 25));
 		// L1 500m
-		steps.add( new TrainingStep( 1, 500, 30));
-		stepIter=steps.iterator();
+		steps.add( new TrainingStep( 1, 500, 25));
 	}
 
 	public void startTraining() {
 		commandText.setText("Training will be started.");
+		stepIter=steps.iterator();
 		init=true;
 	}
 
@@ -98,6 +100,8 @@ public class Trainer implements DataNotifier {
 			commandText.setText( "Step finished.");
 			initStep=true;
 		}
+
+		commandRemain.setText( String.format("%03d",step.getRemaining(dr.getTotalDistance())));
 		
 		if( step.conditionFulfilled(dr.getWatt())) {
 			commandText.setFill(Color.GREEN);
