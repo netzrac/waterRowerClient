@@ -12,7 +12,11 @@ public class Trainer implements DataNotifier {
 
 	private Text commandText;
 	private boolean init=false;
+	// TODO: Use for statistics
+	@SuppressWarnings("unused")
 	private int baseTotalSeconds;
+	// TODO: Use for statistics
+	@SuppressWarnings("unused")
 	private int baseTotalDistance;
 
 	List<TrainingStep> steps=new ArrayList<TrainingStep>();

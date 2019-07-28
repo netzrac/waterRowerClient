@@ -27,6 +27,8 @@ public class MetricHelper {
 			return midCalHr[ level-1];
 		case LEVEL:
 			return 2;
+		default:
+			break;
 		}
 		return Integer.MAX_VALUE;
 	}
@@ -43,6 +45,8 @@ public class MetricHelper {
 		case TOTAL_SECS:
 		case CURR500M_SECS:
 			return String.format("%02d:%02d", getMidValue(vt, level)/60, getMidValue(vt, level)%60);
+		default:
+			break;
 		}
 
 		return "UNKNOWN";	
@@ -68,6 +72,8 @@ public class MetricHelper {
 			return "CAL/HR";
 		case LEVEL:
 			return "LEVEL";
+		default:
+			break;
 		}
 		return "UNKNOWN";		
 	}

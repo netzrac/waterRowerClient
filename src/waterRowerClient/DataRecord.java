@@ -113,6 +113,9 @@ public class DataRecord {
 	}
 
 	public int getHeartrate() {
+		if( rawData.length()<32) {
+			return 0;
+		}
 		return (Integer.parseInt( 
 				rawData.substring(29,32)));		
 	}
@@ -145,7 +148,7 @@ public class DataRecord {
 
 	public static boolean isDataRecord(String rawData) {
 		String id=rawData.substring(0,3);
-		if( rawData.length()!=32 || !dataId.equals(id)) {
+		if( rawData.length()<29 || !dataId.equals(id)) {
 			return false;
 		} 
 		return true;

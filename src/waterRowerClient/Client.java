@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Client implements Runnable {
 
 	private ArrayList<DataNotifier> notifiers=new ArrayList<DataNotifier>();
+	private ArrayList<HeartrateNotifier> heartrateNotifiers=new ArrayList<HeartrateNotifier>();
 	private Socket s;
 	private Scanner in;
 	private PrintWriter out;
@@ -48,6 +49,18 @@ public class Client implements Runnable {
 					}
 		        }
 	        	break;
+	        case 'P':
+		        System.out.println("PLSE: "+data);
+		        for( HeartrateNotifier hn:heartrateNotifiers) {
+		        	//try {
+						hn.heartrateEvent(data.substring(2));
+					//} catch (IOException e) {
+					//	System.err.println( "Exception caught providing data to notifier: "+e.getLocalizedMessage());
+					//	heartrateNotifiers.remove(hn);
+					//	System.err.println( "Notifier removed from list of notifiers.");
+					//}
+		        }
+	        	break;
 	        default:
 	        	System.out.println("UKWN: "+data);
 	        	break;
@@ -63,12 +76,20 @@ public class Client implements Runnable {
 		
 	}
 	
-	void registerNotifier(DataNotifier notifier) {
+	void registerDataNotifier(DataNotifier notifier) {
 		notifiers.add(notifier);
 	}
 	
-	void unregisterNotifier(DataNotifier notifier) {
+	void unregisterDataNotifier(DataNotifier notifier) {
 		notifiers.remove(notifier);
+	}
+	
+	void registerHeartrateNotifier(HeartrateNotifier notifier) {
+		heartrateNotifiers.add(notifier);
+	}
+	
+	void unregisterHeartrateNotifier(HeartrateNotifier notifier) {
+		heartrateNotifiers.remove(notifier);
 	}
 	
 	void sendCommand( Commands commands) {

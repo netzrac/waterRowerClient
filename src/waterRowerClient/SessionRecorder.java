@@ -8,13 +8,14 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SessionRecorder implements DataNotifier {
+public class SessionRecorder implements DataNotifier, HeartrateNotifier {
 
 	private String path;
 	private File file;
 	private PrintWriter out;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss") ;
 	private boolean writeTimestamp=false;
+	private String heartrate="000";
 
 	public SessionRecorder() {
 		path = ClientConfig.getStringOptionValue( "folder");
@@ -60,7 +61,12 @@ public class SessionRecorder implements DataNotifier {
 		} else if( "000000".contentEquals(s.substring(17,23))) {
 			writeTimestamp=true;
 		} 
-		out.println(s);
+		out.println(s+heartrate);
+	}
+
+	@Override
+	public void heartrateEvent(String heartrate) {
+		this.heartrate=heartrate;
 	}
 
 }

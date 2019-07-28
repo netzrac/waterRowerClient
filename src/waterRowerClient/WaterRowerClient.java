@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -54,8 +55,9 @@ public class WaterRowerClient extends Application {
 		}
 		client.sendCommand( Client.Commands.CMD_RESET);
 		sessionRecorder =new SessionRecorder();
-		client.registerNotifier(sessionRecorder);
-		client.registerNotifier(cm);
+		client.registerDataNotifier(sessionRecorder);
+		client.registerHeartrateNotifier(sessionRecorder);
+		client.registerDataNotifier(cm);
 		sessionRecorder.start();
 	}
 	
@@ -64,13 +66,14 @@ public class WaterRowerClient extends Application {
 			trainingBtn.setDisable(false);
 		}
 		sessionRecorder.stop();
-		client.unregisterNotifier(sessionRecorder);
-		client.unregisterNotifier(cm);
+		client.unregisterDataNotifier(sessionRecorder);
+		client.unregisterHeartrateNotifier(sessionRecorder);
+		client.unregisterDataNotifier(cm);
 	}
 	
 	public void startTraining() throws IOException {
 		startStopBtn.setDisable(true);
-		client.registerNotifier(trainer);
+		client.registerDataNotifier(trainer);
 		trainer.startTraining();
 		startRecording();
 	}
@@ -80,7 +83,7 @@ public class WaterRowerClient extends Application {
 		commandRemain.setText("");
 		stopRecording();
 		trainer.stopTraining();
-		client.unregisterNotifier(trainer);
+		client.unregisterDataNotifier(trainer);
 	}
 
 	public static void main(String[] args) {
@@ -118,10 +121,11 @@ public class WaterRowerClient extends Application {
 	    centerPane.setPrefSize(1200, 1200);
         
 		// Start Circlemeter
-		c = new Circle( 600, 600, 100);
+		c = new Circle( 800, 800, 100);
+		c.setFill(Color.LIGHTCYAN);
         cm=new CircleMeter(c, leftBox, topBox, rightBox);
         
-	    centerPane.setPrefSize(600, 600);
+	    centerPane.setPrefSize(800, 800);
         //centerPane.getChildren().addAll(c, commandRemain);
 	    centerPane.add(c, 0, 0);
 	    centerPane.add( commandRemainHBox, 0, 0);
@@ -150,7 +154,8 @@ public class WaterRowerClient extends Application {
         stdValBox.getChildren().addAll(levelBox, distBox, timeBox);
 
         dn=new DefaultNotifier(levelBox, distBox, timeBox, heartrateText);
-        client.registerNotifier(dn);
+        client.registerDataNotifier(dn);
+        client.registerHeartrateNotifier(dn);
 
         // Bottom Box
         

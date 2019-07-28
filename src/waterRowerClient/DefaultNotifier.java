@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javafx.scene.text.Text;
 
-public class DefaultNotifier implements DataNotifier {
+public class DefaultNotifier implements DataNotifier, HeartrateNotifier {
 
 	private StdHBox levelBox;
 	private StdHBox distBox;
@@ -36,7 +36,11 @@ public class DefaultNotifier implements DataNotifier {
 		levelBox.setCurrValue(dr.getLevel());
 		distBox.setCurrValue(dr.getTotalDistance());
 		timeBox.setCurrValue(String.format("%02d:%02d", dr.getTotalSeconds()/60, dr.getTotalSeconds()%60));
-		heartRateText.setText(String.format("%03d", dr.getHeartrate()));
+	}
+
+	@Override
+	public void heartrateEvent(String heartrate) {
+		heartRateText.setText(String.format("%03d", Integer.parseInt(heartrate)));
 	}
 
 }
