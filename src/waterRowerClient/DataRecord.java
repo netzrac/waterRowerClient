@@ -19,12 +19,13 @@ import com.sun.javafx.binding.StringFormatter;
  * 20-22	Watt
  * 23-26	Cal/h
  * 27-28	Level
- * 29	\n
+ * 29-31    Heartrate
+ * 32	\n
  *
  */
 public class DataRecord {
 
-	public static enum DataRecordValueType { TOTAL_SECS, TOTAL_DIST, CURR500M_SECS, SPM, WATT, CAL_HR, LEVEL}
+	public static enum DataRecordValueType { TOTAL_SECS, TOTAL_DIST, CURR500M_SECS, SPM, WATT, CAL_HR, LEVEL, HEARTRATE}
 	
 	public int getValue( DataRecordValueType vt) {
 		switch (vt) {
@@ -42,6 +43,8 @@ public class DataRecord {
 			return getCalPerHr();
 		case LEVEL:
 			return getLevel();
+		case HEARTRATE:
+			return getHeartrate();
 		}
 		return Integer.MAX_VALUE;
 	}
@@ -64,6 +67,8 @@ public class DataRecord {
 			return String.valueOf(getCalPerHr());
 		case LEVEL:
 			return String.valueOf(getLevel());
+		case HEARTRATE:
+			return String.valueOf(getHeartrate());
 		}
 		return "UNKNOWN";
 	}
@@ -107,6 +112,11 @@ public class DataRecord {
 				rawData.substring(27,29)));		
 	}
 
+	public int getHeartrate() {
+		return (Integer.parseInt( 
+				rawData.substring(29,32)));		
+	}
+
 	private String rawData=null;
 	
 	public static String dataId="A80"; 
@@ -135,7 +145,7 @@ public class DataRecord {
 
 	public static boolean isDataRecord(String rawData) {
 		String id=rawData.substring(0,3);
-		if( rawData.length()!=29 || !dataId.equals(id)) {
+		if( rawData.length()!=32 || !dataId.equals(id)) {
 			return false;
 		} 
 		return true;

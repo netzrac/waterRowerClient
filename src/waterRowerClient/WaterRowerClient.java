@@ -37,6 +37,7 @@ public class WaterRowerClient extends Application {
 	private Trainer trainer;
 	private Text commandRemain;
 	private HBox commandRemainHBox;
+	private Text heartrateText;
 
 	public void init() throws Exception {
 		// init Application
@@ -98,10 +99,12 @@ public class WaterRowerClient extends Application {
         commandText=new Text( "No active training.");
         commandText.setFont(Font.font ("Verdana", 27));
         commandRemain=new Text( "");
+        commandRemain.setFont(Font.font ("Verdana", 36));
+        heartrateText=new Text( "");
+        heartrateText.setFont(Font.font ("Verdana", 36));
         commandRemainHBox=new HBox();
         commandRemainHBox.setAlignment(Pos.CENTER);
-        commandRemainHBox.getChildren().add(commandRemain);
-        commandRemain.setFont(Font.font ("Verdana", 36));
+        commandRemainHBox.getChildren().addAll(commandRemain, heartrateText);
         
         trainer=new Trainer(commandText, commandRemain);
 
@@ -146,7 +149,7 @@ public class WaterRowerClient extends Application {
         stdValBox.setAlignment(Pos.CENTER);
         stdValBox.getChildren().addAll(levelBox, distBox, timeBox);
 
-        dn=new DefaultNotifier(levelBox, distBox, timeBox);
+        dn=new DefaultNotifier(levelBox, distBox, timeBox, heartrateText);
         client.registerNotifier(dn);
 
         // Bottom Box

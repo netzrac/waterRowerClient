@@ -2,16 +2,20 @@ package waterRowerClient;
 
 import java.io.IOException;
 
+import javafx.scene.text.Text;
+
 public class DefaultNotifier implements DataNotifier {
 
 	private StdHBox levelBox;
 	private StdHBox distBox;
 	private StdHBox timeBox;
+	private Text heartRateText;
 
-	public DefaultNotifier(StdHBox levelBox, StdHBox distBox, StdHBox timeBox) {
+	public DefaultNotifier(StdHBox levelBox, StdHBox distBox, StdHBox timeBox, Text hearBeatText) {
 		this.levelBox=levelBox;
 		this.distBox=distBox;
 		this.timeBox=timeBox;
+		this.heartRateText=hearBeatText;
 	}
 
 	@Override
@@ -32,6 +36,7 @@ public class DefaultNotifier implements DataNotifier {
 		levelBox.setCurrValue(dr.getLevel());
 		distBox.setCurrValue(dr.getTotalDistance());
 		timeBox.setCurrValue(String.format("%02d:%02d", dr.getTotalSeconds()/60, dr.getTotalSeconds()%60));
+		heartRateText.setText(String.format("%03d", dr.getHeartrate()));
 	}
 
 }
