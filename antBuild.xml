@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project waterRowerClient">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/Users/cp/eclipse-workspace"/>
+    <property name="dir.jarfile" value="C:/Users/cp/Desktop"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/wrsClient.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="waterRowerClient.WaterRowerClient"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-cli-1.4/commons-cli-1.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.jupiter.api_5.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.jupiter.engine_5.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.jupiter.migrationsupport_5.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.jupiter.params_5.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.platform.commons_1.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.platform.engine_1.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.platform.launcher_1.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.platform.runner_1.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.platform.suite.api_1.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit.vintage.engine_5.4.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.opentest4j_1.1.1.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.apiguardian_1.0.0.v20190212-2109.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Program Files/Eclipse 4.12/eclipse/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar"/>
+        </jar>
+    </target>
+</project>
